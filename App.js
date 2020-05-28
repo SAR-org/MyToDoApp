@@ -88,7 +88,7 @@ class App extends React.Component {
 
   render() {
     return (
-      // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         
           <View style={styles.headerStyle}>
@@ -109,7 +109,7 @@ class App extends React.Component {
             {this.renderToDoView()}
           </ScrollView>
       </View>
-      // </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
     );
   }
 

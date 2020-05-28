@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "MyToDoApp",
+    "name": "To Do",
     "slug": "MyToDoApp",
     "platforms": [
       "ios",
@@ -15,6 +15,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "android": {
+      "package": "com.sar.org.ToDO",
+      "versionCode": 1
+    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -23,6 +27,7 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": ""
   }
 }
