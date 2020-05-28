@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   AsyncStorage,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  Alert
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -29,10 +30,18 @@ class App extends React.Component {
 
     });
   }
-
+  
   addToDo = async () => {
     if(this.state.text  === '' || this.state.text ===null){
-      alert("Please add a TODO action!");
+      Alert.alert(
+        'Item Required',
+        'Please add a TODO action!',
+        [
+           {text: 'OK',onPress: () => {}},
+        ],
+        { cancelable: false }
+      )
+
     }else{
       this.arr.push({ id: this.id, item: this.state.text });
       this.id++;
