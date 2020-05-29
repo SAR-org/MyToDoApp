@@ -23,9 +23,9 @@ class AddToDo extends React.Component{
     render(){
         return (
             <View>
-                <View style={styles.headerStyle}>
+                {/* <View style={styles.headerStyle}>
                     <Text style={styles.headerText}>My To Do</Text>
-                </View>
+                </View> */}
                 <View style={styles.addTodoStyle}>
                     <TextInput
                     placeholder='add todo...'
