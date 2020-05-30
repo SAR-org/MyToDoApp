@@ -12,10 +12,14 @@ import ListTodos from './listTodos';
 import AddToDo from './addToDo'
 
 class ToDoHome extends React.Component {
-  arr = [];
-  id = 1;
+  headerArr = [];
+  toDoListArr = [];
+  headerId = 1;
+  itemId = 1;
   state = {
-    todos: []
+    homecall : true,
+    todosHeader: [],
+    currentHeadeToDo : []
   }
 
   constructor(props) {
@@ -23,13 +27,21 @@ class ToDoHome extends React.Component {
     this.inputTextField = React.createRef();
   }
   componentDidMount = () => {
-
-    AsyncStorage.getItem('myToDoListItems').then((value) => {
-      if (value != null) {
-        this.setState({ todos: JSON.parse(value) });
-      }
-
+    //Adding an event listner om focus
+    //So whenever the screen will have focus it will set load the header details from memory.
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      AsyncStorage.getItem('myToDoListItemsx').then((value) => {
+        if (value != null) {
+          this.setState({ todosHeader: JSON.parse(value) });
+        }
+  
+      });
     });
+  }
+
+  componentWillUnmount() {
+    // Remove the event listener before removing the screen from the stack
+    this.focusListener.remove();
   }
 
   addToDo = async (inputText) => {
@@ -44,46 +56,68 @@ class ToDoHome extends React.Component {
       )
 
     } else {
-      this.arr.push({ id: this.id, item: inputText });
-      this.id++;
+        var newHeadList = [];
+        
+      var newItemHead = [{ id: this.headerId, header: inputText, items : []}];
+      if(this.state.todosHeader != null){
+        newHeadList = [...newItemHead,...this.state.todosHeader];
+      }else{
+        newHeadList = newItemHead;
+      }
+        this.headerId++;
+        await AsyncStorage.setItem("myToDoListItemsx", JSON.stringify(newHeadList));
 
-      await AsyncStorage.setItem("myToDoListItems", JSON.stringify(this.arr));
+        this.setState({ todosHeader: JSON.parse(await AsyncStorage.getItem("myToDoListItemsx")) });
 
-      this.setState({ todos: JSON.parse(await AsyncStorage.getItem("myToDoListItems")) });
-
-      this.inputTextField.current.handleInputTextAfterSubmission();
+        this.inputTextField.current.handleInputTextAfterSubmission();
     }
 
   }
 
   deleteToDo = (id) => {
 
-    var toDoList = this.state.todos;
+    var toDoList = this.state.todosHeader;
     var newToDoList = toDoList.filter(toDo => toDo.id != id);
 
-    this.arr = this.arr.filter(item => item.id != id);
+    this.setState({ todosHeader: newToDoList });
 
-    this.setState({ todos: newToDoList });
+    AsyncStorage.setItem("myToDoListItemsx", JSON.stringify(newToDoList));
+  }
 
-    AsyncStorage.setItem("myToDoListItems", JSON.stringify(newToDoList));
+  showToDoItems = (itemId)=>{
+    
+    var currentToDoHeader = this.state.todosHeader.filter(toDoheader => toDoheader.id === itemId)[0];
+    this.props.navigation.navigate('ToDoItems',
+    {itemId:itemId});
+    
+  }
+
+  addItemCallFromListingPage = ()=>{
+    alert("testing this callback====>>>")
   }
 
   render() {
     return (
 
-     // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <AddToDo
             addToDo={this.addToDo}
+            homeCall= {this.state.homecall}
+            headerItemId = {null}
             ref={this.inputTextField} />
           
           <ScrollView>
-            <ListTodos todos={this.state.todos} deleteToDo={this.deleteToDo} />
+            <ListTodos 
+            todos={this.state.todosHeader} 
+            deleteToDo={this.deleteToDo} 
+            showToDoItems={this.showToDoItems}
+            />
           </ScrollView>
           
           
         </View>
-      //</TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
     );
   }
 

@@ -1,9 +1,7 @@
 import React from 'react';
 import {
     StyleSheet,
-    Text,
     View,
-    TouchableOpacity,
     TextInput,
     Button
 } from 'react-native';
@@ -23,9 +21,6 @@ class AddToDo extends React.Component{
     render(){
         return (
             <View>
-                {/* <View style={styles.headerStyle}>
-                    <Text style={styles.headerText}>My To Do</Text>
-                </View> */}
                 <View style={styles.addTodoStyle}>
                     <TextInput
                     placeholder='add todo...'
@@ -34,8 +29,8 @@ class AddToDo extends React.Component{
                     onChangeText={(text) => this.setState({ text })}
                     ref={(text) => { this.toDoTextInput = text; }}
                     />
-
-                    <Button title='Add To Do' onPress={()=>this.props.addToDo(this.state.text)} />
+                    <Button title='Add To Do' 
+                    onPress={()=>this.props.addToDo(this.state.text,this.props.homeCall,this.props.headerItemId)} />
                 </View>
             </View>
             

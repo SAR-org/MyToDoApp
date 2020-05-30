@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import {
     StyleSheet,
     Text,
@@ -9,21 +9,29 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-class ListTodos extends React.Component{
+
+class ToDoListing extends React.Component{
+
+    state = {
+        toDoStateItems : [],
+    }
 
     render() {
+        
+        
         var index = 0;
-        return this.props.todos.map(toDoItem => {
+        
+        return this.props.toDoItems.map(toDoItem => {
           index++;
           return (
-            <TouchableOpacity key={index}>
+            
+            <TouchableOpacity key={index}> 
               <View style={styles.listStyle}>
                 <Text style={styles.indexStyle}>{index}</Text>
-                <Text 
-                style={styles.itemHeaderStyle}
-                onPress={()=>this.props.showToDoItems(toDoItem.id)}>{toDoItem.header}</Text>
+                <Text style={styles.itemHeaderStyle}
+                >{toDoItem.listItem}</Text>
                 <MaterialIcons
-                  onPress={() => this.props.deleteToDo(toDoItem.id)}
+                  onPress={() => this.props.deleteToDoItem(this.props.headerItemId,toDoItem.listId)}
                   name="done"
                   size={24}
                   color="green"
@@ -69,4 +77,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ListTodos;
+export default ToDoListing;
