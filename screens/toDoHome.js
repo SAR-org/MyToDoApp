@@ -44,7 +44,18 @@ class ToDoHome extends React.Component {
     this.focusListener.remove();
   }
 
+  isItemAlreadyAvailable = (inputText)=>{
+    var found = false;
+    this.state.todosHeader.map(toDoItem=>{
+      if(toDoItem.header.trim().toLowerCase() === inputText.trim().toLowerCase()){
+        found = true;
+      }
+    });
+    return found;
+  }
+
   addToDo = async (inputText) => {
+    
     if (inputText === '' || inputText === null) {
       Alert.alert(
         'Item Required',
@@ -55,24 +66,39 @@ class ToDoHome extends React.Component {
         { cancelable: false }
       )
 
-    } else {
+    } else{
+      //console.warn('Item found validation returns==>>'+this.isItemAlreadyAvailable(inputText));
+      if(this.isItemAlreadyAvailable(inputText)){
+        Alert.alert(
+          'Same Header',
+          'Same header already available!',
+          [
+            { text: 'OK', onPress: () => { } },
+          ],
+          { cancelable: false }
+        )
+      }else{
         var newHeadList = [];
         
-      var newItemHead = [{ id: this.headerId, header: inputText, items : []}];
-      if(this.state.todosHeader != null){
-        newHeadList = [...newItemHead,...this.state.todosHeader];
-      }else{
-        newHeadList = newItemHead;
-      }
+        var newItemHead = [{ id: this.headerId, header: inputText, items : []}];
+        if(this.state.todosHeader != null){
+          newHeadList = [...newItemHead,...this.state.todosHeader];
+        }else{
+          newHeadList = newItemHead;
+        }
         this.headerId++;
         await AsyncStorage.setItem("myToDoListItemsx", JSON.stringify(newHeadList));
 
         this.setState({ todosHeader: JSON.parse(await AsyncStorage.getItem("myToDoListItemsx")) });
 
         this.inputTextField.current.handleInputTextAfterSubmission();
+      }
+        
     }
 
   }
+
+  
 
   deleteToDo = (id) => {
 

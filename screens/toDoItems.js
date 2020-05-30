@@ -39,6 +39,16 @@ class ToDoItems extends React.Component{
          this.setState({disPlayToDoHead : currentToDoHeader});
     }
 
+    isItemAlreadyAvailable = (inputText,items)=>{
+        var found = false;
+        items.map(toDoItem=>{
+          if(toDoItem.listItem.trim().toLowerCase() === inputText.trim().toLowerCase()){
+            found = true;
+          }
+        });
+        return found;
+      }
+
     async addToDoItems(itemId,inputText) {
         if (inputText === '' || inputText === null) {
             Alert.alert(
@@ -54,25 +64,39 @@ class ToDoItems extends React.Component{
             var todosHeader = [];
             todosHeader = JSON.parse(await AsyncStorage.getItem("myToDoListItemsx"));
             var currentToDoHeader = todosHeader.filter(toDoheader => toDoheader.id === itemId)[0];
-            var testId = currentToDoHeader.items.length;
-            testId ++;
+            if(this.isItemAlreadyAvailable(inputText,currentToDoHeader.items)){
+                Alert.alert(
+                  'Same Item',
+                  'Same TO DO item already available in this listing!',
+                  [
+                    { text: 'OK', onPress: () => { } },
+                  ],
+                  { cancelable: false }
+                )
+              }else{
+                var testId = currentToDoHeader.items.length;
+                testId ++;
 
-            var newItem = [{listId : testId,listItem:inputText}];
+                var newItem = [{listId : testId,listItem:inputText}];
+                
+                var valueMergedItems = [...newItem,...currentToDoHeader.items];
+
+                currentToDoHeader.items = valueMergedItems;
+                var newToDoHeader = todosHeader.filter(toDoHeader => toDoHeader.id != itemId);
+
+                var newHeadervalue = [];
+                newHeadervalue.push(currentToDoHeader);
+                newHeadervalue = [...newHeadervalue,...newToDoHeader];
+                await AsyncStorage.setItem("myToDoListItemsx", JSON.stringify(newHeadervalue));
+
+                this.setState({displayToDoItemList : currentToDoHeader.items});
+
+                this.clearInput();
+              }
             
-            var valueMergedItems = [...newItem,...currentToDoHeader.items];
-
-            currentToDoHeader.items = valueMergedItems;
-            var newToDoHeader = todosHeader.filter(toDoHeader => toDoHeader.id != itemId);
-
-            var newHeadervalue = [];
-            newHeadervalue.push(currentToDoHeader);
-            newHeadervalue = [...newHeadervalue,...newToDoHeader];
-            await AsyncStorage.setItem("myToDoListItemsx", JSON.stringify(newHeadervalue));
-
-            this.setState({displayToDoItemList : currentToDoHeader.items});
         }
     
-        this.clearInput();
+        
         
     }
 
