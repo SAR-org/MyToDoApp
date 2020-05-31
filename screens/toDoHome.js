@@ -6,7 +6,8 @@ import {
   AsyncStorage,
   TouchableWithoutFeedback,
   Keyboard,
-  Alert
+  Alert,
+  ImageBackground,
 } from 'react-native';
 import ListTodos from './listTodos';
 import AddToDo from './addToDo'
@@ -17,9 +18,11 @@ class ToDoHome extends React.Component {
   headerId = 1;
   itemId = 1;
   state = {
-    homecall : true,
+    image: null,
+    headerTest: 'This is a new header',
+    homecall: true,
     todosHeader: [],
-    currentHeadeToDo : []
+    currentHeadeToDo: []
   }
 
   constructor(props) {
@@ -34,9 +37,21 @@ class ToDoHome extends React.Component {
         if (value != null) {
           this.setState({ todosHeader: JSON.parse(value) });
         }
-  
+
       });
-    });
+
+      AsyncStorage.getItem('backgroundImageUri').then((value) => {
+        if (value != "") {
+          this.setState({ image: value });
+        } else {
+          this.setState({ image: null });
+        }
+
+
+      });
+    }
+
+    );
   }
 
   componentWillUnmount() {
@@ -44,10 +59,10 @@ class ToDoHome extends React.Component {
     this.focusListener.remove();
   }
 
-  isItemAlreadyAvailable = (inputText)=>{
+  isItemAlreadyAvailable = (inputText) => {
     var found = false;
-    this.state.todosHeader.map(toDoItem=>{
-      if(toDoItem.header.trim().toLowerCase() === inputText.trim().toLowerCase()){
+    this.state.todosHeader.map(toDoItem => {
+      if (toDoItem.header.trim().toLowerCase() === inputText.trim().toLowerCase()) {
         found = true;
       }
     });
@@ -55,7 +70,7 @@ class ToDoHome extends React.Component {
   }
 
   addToDo = async (inputText) => {
-    
+
     if (inputText === '' || inputText === null) {
       Alert.alert(
         'Item Required',
@@ -66,9 +81,8 @@ class ToDoHome extends React.Component {
         { cancelable: false }
       )
 
-    } else{
-      //console.warn('Item found validation returns==>>'+this.isItemAlreadyAvailable(inputText));
-      if(this.isItemAlreadyAvailable(inputText)){
+    } else {
+      if (this.isItemAlreadyAvailable(inputText)) {
         Alert.alert(
           'Same Header',
           'Same header already available!',
@@ -77,13 +91,13 @@ class ToDoHome extends React.Component {
           ],
           { cancelable: false }
         )
-      }else{
+      } else {
         var newHeadList = [];
-        
-        var newItemHead = [{ id: this.headerId, header: inputText, items : []}];
-        if(this.state.todosHeader != null){
-          newHeadList = [...newItemHead,...this.state.todosHeader];
-        }else{
+
+        var newItemHead = [{ id: this.headerId, header: inputText, items: [] }];
+        if (this.state.todosHeader != null) {
+          newHeadList = [...newItemHead, ...this.state.todosHeader];
+        } else {
           newHeadList = newItemHead;
         }
         this.headerId++;
@@ -93,12 +107,12 @@ class ToDoHome extends React.Component {
 
         this.inputTextField.current.handleInputTextAfterSubmission();
       }
-        
+
     }
 
   }
 
-  
+
 
   deleteToDo = (id) => {
 
@@ -110,16 +124,31 @@ class ToDoHome extends React.Component {
     AsyncStorage.setItem("myToDoListItemsx", JSON.stringify(newToDoList));
   }
 
-  showToDoItems = (itemId)=>{
-    
-    var currentToDoHeader = this.state.todosHeader.filter(toDoheader => toDoheader.id === itemId)[0];
+  showToDoItems = (itemId) => {
     this.props.navigation.navigate('ToDoItems',
-    {itemId:itemId});
-    
+      { itemId: itemId });
+
   }
 
-  addItemCallFromListingPage = ()=>{
-    alert("testing this callback====>>>")
+  setBackground = () => {
+    return (
+      <View>
+        <AddToDo
+          addToDo={this.addToDo}
+          homeCall={this.state.homecall}
+          headerItemId={null}
+          ref={this.inputTextField} />
+
+        <ScrollView>
+          <ListTodos
+            todos={this.state.todosHeader}
+            deleteToDo={this.deleteToDo}
+            showToDoItems={this.showToDoItems}
+          />
+        </ScrollView>
+      </View>
+
+    );
   }
 
   render() {
@@ -127,7 +156,7 @@ class ToDoHome extends React.Component {
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <AddToDo
+          {/* <AddToDo
             addToDo={this.addToDo}
             homeCall= {this.state.homecall}
             headerItemId = {null}
@@ -139,9 +168,15 @@ class ToDoHome extends React.Component {
             deleteToDo={this.deleteToDo} 
             showToDoItems={this.showToDoItems}
             />
-          </ScrollView>
-          
-          
+          </ScrollView> */}
+
+          {this.state.image && <ImageBackground style={styles.backgroundImage} source={{ uri: this.state.image }} >
+            {this.setBackground()}
+          </ImageBackground>}
+          {!this.state.image && <ImageBackground style={styles.backgroundImage} source={{ uri: this.state.image }} >
+            {this.setBackground()}
+          </ImageBackground>}
+
         </View>
       </TouchableWithoutFeedback>
     );
@@ -152,8 +187,17 @@ class ToDoHome extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    //backgroundColor: '#242526', dark backgroung like FB
+    backgroundColor: '#FCFEFE',
     alignItems: 'center',
+  },
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    justifyContent: "center",
+    alignItems: "center",
+    opacity: 0.7
   },
 
 });

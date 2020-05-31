@@ -6,34 +6,34 @@ import {
     Button
 } from 'react-native';
 
-class AddToDo extends React.Component{
+class AddToDo extends React.Component {
 
     state = {
-        text : '',
+        text: '',
     }
 
-    handleInputTextAfterSubmission = ()=>{
-        this.setState({text : ''});
+    handleInputTextAfterSubmission = () => {
+        this.setState({ text: '' });
         this.toDoTextInput.clear();
         this.toDoTextInput.focus();
     }
 
-    render(){
+    render() {
         return (
             <View>
                 <View style={styles.addTodoStyle}>
                     <TextInput
-                    placeholder='add todo...'
-                    style={styles.inputStyle}
-                    value={this.state.text}
-                    onChangeText={(text) => this.setState({ text })}
-                    ref={(text) => { this.toDoTextInput = text; }}
+                        placeholder='add todo...'
+                        style={styles.inputStyle}
+                        value={this.state.text}
+                        onChangeText={(text) => this.setState({ text })}
+                        ref={(text) => { this.toDoTextInput = text; }}
                     />
-                    <Button title='Add To Do' 
-                    onPress={()=>this.props.addToDo(this.state.text,this.props.homeCall,this.props.headerItemId)} />
+                    <Button title='Add To Do'
+                        onPress={() => this.props.addToDo(this.state.text, this.props.homeCall, this.props.headerItemId)} />
                 </View>
             </View>
-            
+
         );
     }
 }
@@ -41,23 +41,23 @@ class AddToDo extends React.Component{
 const styles = StyleSheet.create({
     headerStyle: {
         paddingTop: 24,
-    
-      },
-      headerText: {
+
+    },
+    headerText: {
         fontSize: 30,
-    
-      },
-      inputStyle: {
+
+    },
+    inputStyle: {
         width: 300,
         height: 40,
         borderColor: 'blue',
         borderWidth: 1,
         margin: 15,
         borderRadius: 5
-      },
-      addTodoStyle: {
+    },
+    addTodoStyle: {
         paddingTop: 40
-      },
+    },
 });
 
 export default AddToDo;

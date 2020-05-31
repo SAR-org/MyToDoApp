@@ -17,8 +17,10 @@ const screens = {
     },
     ToDoItems : {
         screen : ToDoItems,
-        navigationOptions : {
-                title : 'To Do Items List',
+        navigationOptions : ({navigation})=>{
+            return{
+                title: navigation.getParam('Title', 'To Do Item loading...'),
+            }
             
         }
     },

@@ -3,6 +3,7 @@ import {createAppContainer} from 'react-navigation';
 
 import ToDoHomeStack from './toDoStack';
 import AboutStack from './aboutStatck';
+import CustomiseAppStack from './customiseAppStack';
 
 const RootDrawerNavigator = createDrawerNavigator({
     'My TO DOs' : {
@@ -10,6 +11,9 @@ const RootDrawerNavigator = createDrawerNavigator({
     },
     About : {
         screen : AboutStack
+    },
+    CustomiseApp : {
+        screen : CustomiseAppStack
     }
 });
 

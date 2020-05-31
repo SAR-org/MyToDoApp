@@ -20,14 +20,13 @@ class Header extends React.Component{
                size={28} 
                onPress={this.openMenu} 
                style={styles.icon}/>
-               <View style={styles.headerTitle}>
-                    <Image 
+               <Image 
                     source= {require('../assets/todo.png')} 
                     style={styles.headerImage}/>
-                    <View>
+               <View style={styles.headerTitle}>
+                    
                             <Text 
                             style={styles.headerText}>{this.props.headerText}</Text>
-                    </View>
                </View>
            </View> 
         );
@@ -43,6 +42,7 @@ const styles = StyleSheet.create({
         flexDirection : 'row',
         alignItems : 'center',
         justifyContent : 'center',
+        //backgroundColor : '#9DD3E4',
     },
     headerText : {
         fontWeight : 'bold',
@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
         left : 16,
     },
     headerImage : {
-        width : 32,
-        height : 32,
+        width : 50,
+        height : 50,
         marginHorizontal : 20,
     },
     headerTitle : {
